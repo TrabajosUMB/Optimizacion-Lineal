@@ -1,0 +1,91 @@
+#Conjuntos
+set T := 1..12; #Meses del Año
+
+#Parametros
+param d{T}; #Demanda en el mes t
+param c{T}; #Costo unitario en el mes t
+param h{T}; #Costo de mantener una unidad de invemtario en el mes t
+param k{T}; #Capacidad de la bodega en el mes t
+param I0; #Inventario Inicial
+
+#Variables
+var x{t in T} >=0; #Cantidad a comprar en el mes t
+var I{t in T} >=0; #Inventario Final en el mes t
+
+#Funcion Objetivo
+minimize Costo_Total:
+sum{t in T} x[t]*c[t] + sum{t in T} h[t]*I[t];
+
+#Restricciones
+subject to Balance_Inicial:
+I[1] = I0 + x[1] - d[1];
+
+subject to Balance {t in T: t>=2}:
+I[t] = I[t-1] +x[t] - d[t];
+
+subject to Capacidad{t in T}:
+I[t] <= k[t];
+
+subject to Inventario_final:
+I[12] >= 20;
+
+#Datos
+data;
+param d:=
+1	80
+2	70
+3	90
+4	85
+5	100
+6	95
+7	110
+8	105
+9	100
+10	120
+11	130
+12	140;
+
+param c :=
+1	20
+2	20
+3	21
+4	21
+5	22
+6	22
+7	23
+8	23
+9	22
+10	24
+11	25
+12	26;
+
+param h :=
+1	2
+2	2
+3	2
+4	2.1
+5	2.1
+6	2.2
+7	2.2
+8	2.3
+9	2.3
+10	2.4
+11	2.5
+12	2.5;
+
+param k:=
+1	60
+2	60
+3	70
+4	70
+5	80
+6	80
+7	90
+8	90
+9	80
+10	70
+11	70
+12	60;
+
+param I0:= 30;
+
